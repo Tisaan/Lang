@@ -1,4 +1,4 @@
-use crate::parser::statement_ast::{Parameter, Stmt};
+use crate::parser::statement_ast::{Stmt};
 
 // First, define the Token type (assuming it's needed for Binary/Unary expressions)
 #[derive(Debug, Clone, PartialEq)]
@@ -45,7 +45,7 @@ pub enum Expr {
         else_branch: Vec<Expr>,      // Else expressions
     },
     Lambda {
-        parameters: Vec<Parameter>,
+        parameters: Vec<Stmt>,
         body: Box<Expr>,
     },
     List {
@@ -61,7 +61,7 @@ pub enum Expr {
         property: Box<Expr>, // IdentifierExpr
     },
     NCallExpr {
-        args: Vec<Parameter>,
+        args: Vec<Stmt>,
         caller: Box<Expr>,
     },
     Null,

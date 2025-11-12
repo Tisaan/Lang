@@ -14,7 +14,7 @@ impl Parser {
         Parser {pos: 0, tokens: tokens}
     }
     
-    pub fn is_one_of_many(&mut self, tokens: Vec<TokenKind>) -> bool {
+    pub fn is_one_of_many(&mut self, tokens: Vec<TokenType>) -> bool {
         for token in tokens{
             if token == self.current_tokenkind(){
                 return true
@@ -23,7 +23,7 @@ impl Parser {
         return false
     }
 
-    pub fn expect_error(&mut self, expected: TokenKind, err: Option<String>) -> Token {
+    pub fn expect_error(&mut self, expected: TokenType, err: Option<String>) -> Token {
         if self.current_tokenkind() != expected {
             match err {
                 Some(n) => panic!("ParsingError {}", n),
@@ -33,11 +33,11 @@ impl Parser {
         self.advance()
     }
 
-    pub fn expect(&mut self, expected: TokenKind) -> Token {
+    pub fn expect(&mut self, expected: TokenType) -> Token {
         self.expect_error(expected, None)
     }
 
-    pub fn current_tokenkind(&mut self) -> TokenKind {
+    pub fn current_tokenkind(&mut self) -> TokenType {
         match self.tokens.get(self.pos) {
             Some(n) => return n.kind,
             None => panic!("No token found at index {}", self.pos)
@@ -45,7 +45,7 @@ impl Parser {
     }
 
     pub fn clean_newline(&mut self){
-        while self.hasToken() && self.current_tokenkind() == TokenKind::NewLine {
+        while self.has_token() && self.current_tokenkind() == TokenType::NewLine {
             self.advance();
         }
     }
@@ -63,16 +63,20 @@ impl Parser {
         token
     }
 
-    pub fn hasToken(&mut self) -> bool {
-        self.pos < self.tokens.len() && self.current_tokenkind() != TokenKind::EOF
+    pub fn has_token(&mut self) -> bool {
+        self.pos < self.tokens.len() && self.current_tokenkind() != TokenType::EOF
+    }
+
+    pub fn throw(&mut self, mess: &str){
+        panic!("Parsing: {}", mess);
     }
 
     pub fn parse(&mut self) -> Stmt {
         let mut program = Stmt::init_program();
-        while self.hasToken() {
+        while self.has_token() {
             program.push_to_program(parse_stmt(self));
 
-            while (self.current_tokenkind() == TokenKind::NewLine){
+            while self.current_tokenkind() == TokenType::NewLine{
                 self.advance();
             }
         }

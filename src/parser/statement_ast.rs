@@ -27,14 +27,13 @@ pub enum Stmt {
     },
     FunctionDecl {
         name: String,
-        parameters: Vec<Parameter>,
+        parameters: Vec<Stmt>,
         return_type: Type,
-        body: Vec<Stmt>,
+        body: Option<Vec<Stmt>>,
     },
     Parameter {
         name: String,
         param_type: Type,
-        constant: bool,
     },
     VariableDecl {
         name: String,
@@ -49,14 +48,6 @@ pub enum Stmt {
 pub enum Arity {
     Exact(usize),
     Range(usize, usize),
-}
-
-// The Parameter struct (already defined in the previous conversion)
-#[derive(Debug, Clone, PartialEq)]
-pub struct Parameter {
-    pub name: String,
-    pub param_type: Type,
-    pub constant: bool,
 }
 
 // The ExpectStmt function (simplified since Rust has a strong type system)
@@ -96,9 +87,9 @@ impl Stmt {
 
     pub fn new_function_decl(
         name: String,
-        parameters: Vec<Parameter>,
+        parameters: Vec<Stmt>,
         return_type: Type,
-        body: Vec<Stmt>,
+        body: Option<Vec<Stmt>>,
     ) -> Self {
         Stmt::FunctionDecl {
             name,
@@ -108,11 +99,10 @@ impl Stmt {
         }
     }
 
-    pub fn new_parameter(name: String, param_type: Type, constant: bool) -> Self {
+    pub fn new_parameter(name: String, param_type: Type) -> Self {
         Stmt::Parameter {
             name,
             param_type,
-            constant,
         }
     }
 
@@ -127,6 +117,14 @@ impl Stmt {
             value: Box::new(value),
             constant,
             explicit_type,
+        }
+    }
+    
+    pub fn extractblock_body(&self) -> Option<&Vec<Stmt>> {
+        if let Stmt::Block { body } = self {
+            Some(body)
+        } else {
+            None
         }
     }
 }
