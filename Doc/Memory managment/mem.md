@@ -58,3 +58,7 @@
 		//ptr is now free
 	}
   ```
+## Limitation
+  - Use implicit region for <64KB
+  - Use Arena for <1MB
+  - Custom allocator and free >= 1MB
