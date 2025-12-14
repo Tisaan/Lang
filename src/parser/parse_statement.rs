@@ -2,11 +2,12 @@ use crate::parser::parser::Parser;
 use crate::parser::statement_ast::*;
 use crate::lexer::token::TokenType;
 use crate::parser::lookup::*;
+use crate::parser::parse_expression::*;
 
 pub fn parse_stmt(parser: &mut Parser) -> Stmt{
-    let chose = get_stmt_handler(parser.current_tokenkind());
-    if chose.is_some() {
-        return  (chose.unwrap())(parser)
+    let func = get_stmt_handler(parser.current_tokenkind());
+    if func.is_some() {
+        return  (func.unwrap())(parser)
     }
     return parse_expr_stmt(parser)
 }

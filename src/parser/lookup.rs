@@ -75,7 +75,7 @@ pub static BP_LU: Lazy<HashMap<TokenType, BindingPower>> = Lazy::new(|| {
     m
 });
 pub static NUD_LU: Lazy<HashMap<TokenType, NudHandler>> = Lazy::new(|| {
-    let mut m = HashMap::new()
+    let mut m = HashMap::new();
         // ASSIGNMENT
    
     // LITERALS AND IDENTIFIER
